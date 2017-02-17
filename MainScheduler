@@ -1,0 +1,16 @@
+import java.util.concurrent.*;
+
+public class MainScheduler {
+    public static void main(String[] args) {
+    	
+    	//Thread Pooling
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        
+        //Preparing Task
+        FollowupTask followupTask = new FollowupTask(executorService);
+        TaskManagement firstTask = new TaskManagement(followupTask, executorService);
+        
+        //Execute Task
+        executorService.submit(firstTask);
+    }
+}
