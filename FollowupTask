@@ -1,0 +1,56 @@
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.TrayIcon.MessageType;
+import java.net.MalformedURLException;
+public class FollowupTask implements Runnable {
+        private int invocationCount = 0;
+        private ScheduledExecutorService executorService;
+
+        public FollowupTask(ScheduledExecutorService executorService) {
+            this.executorService = executorService;
+        }
+
+        @Override
+        public void run() {
+            invocationCount++;
+            if (invocationCount == 1) {
+                System.out.println("Followup task: resubmit while invocationCount < 20");
+            }
+            System.out.println("invocationCount = " + invocationCount);
+            if (invocationCount < 1) {
+                executorService.schedule(this, 250, TimeUnit.MILLISECONDS);
+
+            } else {
+                if(SystemTray.isSupported()) {
+            		try {
+    					displayTray();
+    				} catch (MalformedURLException e) {
+    					e.printStackTrace();
+    				} catch (AWTException e) {
+    					e.printStackTrace();
+    				}
+            	} else {
+            		System.out.println("tidak support");
+            	}
+                executorService.shutdown();
+            }
+        }
+        
+        private static void displayTray() throws AWTException, java.net.MalformedURLException {
+			SystemTray tray =  SystemTray.getSystemTray();
+			
+			Image image =  Toolkit.getDefaultToolkit().createImage("icon.png");
+			
+			TrayIcon trayIcon = new TrayIcon(image, "Tray Demo");
+			
+			trayIcon.setImageAutoSize(true);
+			trayIcon.setToolTip("System tray icon demo");
+			tray.add(trayIcon);
+        	trayIcon.displayMessage("Hello", "Demo", MessageType.INFO);
+		}
+    }
