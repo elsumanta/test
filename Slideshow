@@ -1,0 +1,18 @@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>  
+<script type="text/javascript">  
+  jQuery.jQueryRandom = 0;
+  jQuery.extend(jQuery.expr[":"], {
+    random: function(a, i, m, r) {
+      if (i == 0) {
+        jQuery.jQueryRandom = Math.floor(Math.random() * r.length);
+      };
+      return i == jQuery.jQueryRandom;
+    }
+  });
+</script>  
+<script type="text/javascript">  
+$().ready(function() {
+  var a = $("table.ms-summarystandardbody td.ms-vb2 a:random");
+  a.parents("div[id^=WebPart]").html('<img src="' + a.attr("href") + '"/>');
+});
+</script>  
